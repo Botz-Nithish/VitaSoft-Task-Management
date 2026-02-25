@@ -1,0 +1,50 @@
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
+import { BellIcon, SunIcon, MoonIcon, Bars3Icon } from '@heroicons/react/24/outline';
+
+const Header: React.FC = () => {
+  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/':
+        return 'Dashboard';
+      case '/calendar':
+        return 'Calendar';
+      default:
+        return 'Overview';
+    }
+  };
+
+  return (
+    <header className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1a2535]">
+      <div className="flex items-center">
+        <button className="md:hidden mr-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+          <Bars3Icon className="w-6 h-6" />
+        </button>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Home <span className="mx-2">/</span> <span className="font-semibold text-gray-900 dark:text-white">{getPageTitle()}</span>
+        </div>
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <button 
+          onClick={toggleTheme}
+          className="p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 rounded-full transition-colors"
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+        >
+          {theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
+        </button>
+        
+        <button className="p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 rounded-full transition-colors relative">
+          <BellIcon className="w-5 h-5" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#ef4444] rounded-full"></span>
+        </button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;

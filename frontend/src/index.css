@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary-green: #00c48c;
+  --color-dark-bg: #0d1f2d;
+  --color-card-light: #ffffff;
+  --color-card-dark: #1a2535;
+  --color-text-light: #1a1a2e;
+  --color-text-dark: #f0f0f0;
+
+  --color-priority-high: #ef4444;
+  --color-priority-med: #f59e0b;
+  --color-priority-low: #10b981;
+
+  --color-status-finished-bg: #d1fae5;
+  --color-status-finished-text: #065f46;
+  --color-status-started-bg: #dbeafe;
+  --color-status-started-text: #1e40af;
+  --color-status-not-started-bg: #f3f4f6;
+  --color-status-not-started-text: #6b7280;
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+
+  html.dark body {
+    @apply bg-[var(--color-dark-bg)] text-[var(--color-text-dark)];
+  }
+
+  /* Global smooth transition for theme switching */
+  * {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+}

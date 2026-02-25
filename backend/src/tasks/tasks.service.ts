@@ -14,7 +14,7 @@ export class TasksService {
       data: {
         title: dto.title,
         description: dto.description,
-        ...(dto.taskType !== undefined && { type: dto.taskType }),
+        ...(dto.taskType !== undefined && { taskType: dto.taskType }),
         ...(dto.status !== undefined && { status: dto.status }),
         ...(dto.priority !== undefined && { priority: dto.priority }),
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
@@ -52,7 +52,7 @@ export class TasksService {
       data: {
         ...(dto.title !== undefined && { title: dto.title }),
         ...(dto.description !== undefined && { description: dto.description }),
-        ...(dto.taskType !== undefined && { type: dto.taskType }),
+        ...(dto.taskType !== undefined && { taskType: dto.taskType }),
         ...(dto.priority !== undefined && { priority: dto.priority }),
         ...(dto.dueDate !== undefined && { dueDate: dto.dueDate ? new Date(dto.dueDate) : null }),
         ...completedAtUpdate,
