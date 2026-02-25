@@ -1,0 +1,26 @@
+# Claude & internal docs
+.claude/
+clauder/
+
+# Environment variables
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Dependencies
+backend/node_modules/
+
+# Build output
+backend/dist/
+backend/generated/
+
+# Prisma generated client (regenerated via prisma generate)
+backend/node_modules/.prisma/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
