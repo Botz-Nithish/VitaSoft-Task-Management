@@ -32,6 +32,12 @@ export class TasksController {
     return this.tasksService.create(user.id, dto);
   }
 
+  @Get('types')
+  @HttpCode(HttpStatus.OK)
+  getTypes(@GetUser() user: RequestUser): Promise<string[]> {
+    return this.tasksService.getTypes(user.id);
+  }
+
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll(@GetUser() user: RequestUser): Promise<Task[]> {

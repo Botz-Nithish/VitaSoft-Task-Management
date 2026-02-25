@@ -21,6 +21,12 @@ export class UpdateTaskDto {
   description?: string;
 
   @IsOptional()
+  @IsString()
+  @IsNotEmpty({ message: 'taskType must not be empty if provided' })
+  @MaxLength(100, { message: 'taskType must not exceed 100 characters' })
+  taskType?: string;
+
+  @IsOptional()
   @IsEnum(TaskStatus, { message: 'Status must be NOT_STARTED, STARTED, or FINISHED' })
   status?: TaskStatus;
 
