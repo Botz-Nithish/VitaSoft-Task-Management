@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTasks, useDeleteTask, useUpdateTask } from '../hooks/useTasks';
 import { useToast } from '../context/ToastContext';
 import ConfirmModal from '../components/ui/ConfirmModal';
@@ -12,7 +12,9 @@ import {
   ClipboardDocumentListIcon, 
   CheckCircleIcon, 
   ClockIcon, 
-  InboxIcon 
+  InboxIcon,
+  FunnelIcon,
+  BarsArrowDownIcon
 } from '@heroicons/react/24/outline';
 import Button from '../components/ui/Button';
 
@@ -28,6 +30,11 @@ const DashboardPage: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | undefined>(undefined);
 
+  // Sorting and Filtering State
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [priorityFilter, setPriorityFilter] = useState<string>('ALL');
+  const [sortBy, setSortBy] = useState<string>('CREATED_DESC');
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -40,6 +47,43 @@ const DashboardPage: React.FC = () => {
   const startedCount = tasks.filter(t => t.status === 'STARTED').length;
   const notStartedCount = tasks.filter(t => t.status === 'NOT_STARTED').length;
   const totalTasks = tasks.length;
+
+  // Apply Filtering and Sorting
+  const processedTasks = useMemo(() => {
+    let result = [...tasks];
+
+    // 1. Filter by Status
+    if (statusFilter !== 'ALL') {
+      result = result.filter(t => t.status === statusFilter);
+    }
+
+    // 2. Filter by Priority
+    if (priorityFilter !== 'ALL') {
+      result = result.filter(t => t.priority === priorityFilter);
+    }
+
+    // 3. Sort
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case 'CREATED_DESC':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'CREATED_ASC':
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case 'DUE_DATE_ASC':
+          // Push null due dates to the bottom
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        case 'PRIORITY':
+          const priorityWeights = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+          return priorityWeights[b.priority] - priorityWeights[a.priority];
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [tasks, statusFilter, priorityFilter, sortBy]);
 
   const handleOpenCreateMode = () => {
     setEditingTask(undefined);
@@ -125,16 +169,70 @@ const DashboardPage: React.FC = () => {
 
       {/* Task List Section */}
       <div className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mt-4">Active Workstreams</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mt-4 sm:mt-0">Active Workstreams</h2>
+          
           {totalTasks > 0 && (
-            <Button onClick={handleOpenCreateMode} className="mt-4">
-              + Add Task
-            </Button>
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Status Filter */}
+              <div className="flex items-center bg-white dark:bg-[#1a2535] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
+                <div className="px-3 text-gray-400 border-r border-gray-200 dark:border-gray-700 hidden sm:block">
+                  <FunnelIcon className="w-4 h-4" />
+                </div>
+                <select 
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="bg-transparent text-sm text-gray-700 dark:text-gray-300 py-2 px-3 outline-none cursor-pointer appearance-none pr-8 relative"
+                  style={{ background: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 0.5rem center/1.5rem 1.5rem` }}
+                >
+                  <option value="ALL">All Status</option>
+                  <option value="NOT_STARTED">Pending</option>
+                  <option value="STARTED">In Progress</option>
+                  <option value="FINISHED">Completed</option>
+                </select>
+              </div>
+
+              {/* Priority Filter */}
+              <div className="flex items-center bg-white dark:bg-[#1a2535] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
+                 <select 
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value)}
+                  className="bg-transparent text-sm text-gray-700 dark:text-gray-300 py-2 px-3 outline-none cursor-pointer appearance-none pr-8 relative"
+                  style={{ background: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 0.5rem center/1.5rem 1.5rem` }}
+                >
+                  <option value="ALL">All Priorities</option>
+                  <option value="HIGH">High</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="LOW">Low</option>
+                </select>
+              </div>
+
+              {/* Sort By Dropdown */}
+              <div className="flex items-center bg-white dark:bg-[#1a2535] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden shadow-sm">
+                <div className="px-3 text-gray-400 border-r border-gray-200 dark:border-gray-700 hidden sm:block">
+                  <BarsArrowDownIcon className="w-4 h-4" />
+                </div>
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-transparent text-sm text-gray-700 dark:text-gray-300 py-2 px-3 outline-none cursor-pointer appearance-none pr-8 relative"
+                  style={{ background: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 0.5rem center/1.5rem 1.5rem` }}
+                >
+                  <option value="CREATED_DESC">Newest First</option>
+                  <option value="CREATED_ASC">Oldest First</option>
+                  <option value="DUE_DATE_ASC">Due Date</option>
+                  <option value="PRIORITY">Priority</option>
+                </select>
+              </div>
+
+              <Button onClick={handleOpenCreateMode} className="ml-auto sm:ml-2">
+                + Add Task
+              </Button>
+            </div>
           )}
         </div>
         <TaskList 
-          tasks={tasks} 
+          tasks={processedTasks} 
           onEdit={handleOpenEditMode} 
           onDelete={handleDeleteRequest} 
           onStatusChange={handleStatusChange}

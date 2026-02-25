@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../api/auth.api';
 import { loginSuccess } from '../features/auth/authSlice';
+import { startTransition } from '../features/ui/transitionSlice';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -39,13 +40,21 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     try {
       const user = await login({ email, password });
-      dispatch(loginSuccess(user));
-      navigate('/');
+      
+      // Start fullscreen animation overlay immediately
+      dispatch(startTransition('LOGIN'));
+      
+      // Wait for the overlay to fully cover the screen (400ms) before authenticating
+      // This prevents React Router from instantly unmounting the LoginPage
+      setTimeout(() => {
+        dispatch(loginSuccess(user));
+        navigate('/');
+      }, 400);
+
     } catch (err: any) {
       setError(err.response?.data?.message?.[0] || err.response?.data?.message || 'Invalid credentials.');
-    } finally {
       setIsLoading(false);
-    }
+    } 
   };
 
   return (
@@ -56,10 +65,8 @@ const LoginPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto">
           {/* Logo Placeholder */}
           <div className="flex items-center space-x-2 mb-12">
-            <div className="w-8 h-8 bg-[#00c48c] rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-lg leading-none">V</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Vitasoft</span>
+            <img src="/logo.svg" alt="TaskSphere Logo" className="w-8 h-8" />
+            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">TaskSphere</span>
           </div>
           
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome back.</h2>
@@ -129,7 +136,7 @@ const LoginPage: React.FC = () => {
         </div>
         
         <div className="mt-auto pt-12 items-center text-xs text-gray-400">
-          <span>&copy; {new Date().getFullYear()} Vitasoft. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} TaskSphere. All rights reserved.</span>
           <span className="mx-2">|</span>
           <a href="#" className="hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</a>
           <span className="mx-2">|</span>

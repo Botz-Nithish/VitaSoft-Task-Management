@@ -12,23 +12,27 @@ import CalendarPage from './pages/CalendarPage';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import ToastContainer from './components/ui/ToastContainer';
+import PageTransition from './components/ui/PageTransition';
 
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   return (
-    <Router>
-      <ToastContainer />
-      <Routes>
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
-        <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
-        
-        <Route path="/" element={<ProtectedRoute><Layout><DashboardPage /></Layout></ProtectedRoute>} />
-        <Route path="/calendar" element={<ProtectedRoute><Layout><CalendarPage /></Layout></ProtectedRoute>} />
-        
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+    <>
+      <PageTransition />
+      <Router>
+        <ToastContainer />
+        <Routes>
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
+          <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
+          
+          <Route path="/" element={<ProtectedRoute><Layout><DashboardPage /></Layout></ProtectedRoute>} />
+          <Route path="/calendar" element={<ProtectedRoute><Layout><CalendarPage /></Layout></ProtectedRoute>} />
+          
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

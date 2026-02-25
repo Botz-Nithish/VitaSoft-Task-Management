@@ -79,10 +79,8 @@ const RegisterPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto">
           {/* Logo Placeholder */}
           <div className="flex items-center space-x-2 mb-12">
-            <div className="w-8 h-8 bg-[#00c48c] rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-lg leading-none">V</span>
-            </div>
-            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Vitasoft</span>
+            <img src="/logo.svg" alt="TaskSphere Logo" className="w-8 h-8" />
+            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">TaskSphere</span>
           </div>
           
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create an account</h2>
@@ -133,7 +131,7 @@ const RegisterPage: React.FC = () => {
         </div>
         
         <div className="mt-auto pt-12 items-center text-xs text-gray-400">
-          <span>&copy; {new Date().getFullYear()} Vitasoft. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} TaskSphere. All rights reserved.</span>
           <span className="mx-2">|</span>
           <a href="#" className="hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</a>
           <span className="mx-2">|</span>

@@ -19,7 +19,19 @@ const formatDueDate = (dateString: string | null) => {
 const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusChange }) => {
   const [showMenu, setShowMenu] = React.useState(false);
 
-  const priorityColors = {
+  const outerColors = {
+    HIGH: 'bg-[#ef4444]/10 dark:bg-[#ef4444]/15 shadow-sm',
+    MEDIUM: 'bg-[#f59e0b]/10 dark:bg-[#f59e0b]/15 shadow-sm',
+    LOW: 'bg-[#10b981]/10 dark:bg-[#10b981]/15 shadow-sm'
+  };
+
+  const accentColors = {
+    HIGH: 'text-[#ef4444]',
+    MEDIUM: 'text-[#f59e0b]',
+    LOW: 'text-[#10b981]'
+  };
+
+  const dotColors = {
     HIGH: 'bg-[#ef4444]',
     MEDIUM: 'bg-[#f59e0b]',
     LOW: 'bg-[#10b981]'
@@ -41,15 +53,20 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusCha
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white dark:bg-[#1a2535] border border-gray-100 dark:border-gray-800 rounded-xl p-5 hover:shadow-md transition-shadow relative"
+      className={`rounded-2xl p-[6px] pt-0 ${outerColors[task.priority]} hover:shadow-md transition-shadow relative flex flex-col`}
     >
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center space-x-2">
-          <span className={`w-2.5 h-2.5 rounded-full ${priorityColors[task.priority]}`} title={`${task.priority} Priority`} />
+      <div className="flex items-center space-x-2.5 px-3 py-3">
+        <span className={`w-3.5 h-3.5 rounded-full ${dotColors[task.priority]}`} />
+        <span className={`text-xs font-bold tracking-widest uppercase ${accentColors[task.priority]}`}>
+          {task.priority === 'HIGH' ? 'HIGH PRIORITY' : `${task.priority} PRIORITY`}
+        </span>
+      </div>
+      
+      <div className="bg-white dark:bg-[#1a2535] rounded-[14px] p-5 flex flex-col flex-1 shadow-sm h-full">
+        <div className="flex justify-between items-start mb-3">
           <h4 className="font-semibold text-gray-900 dark:text-white text-base leading-tight truncate pr-4">
             {task.title}
           </h4>
-        </div>
         
         <div className="relative">
           <button 
@@ -112,6 +129,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusCha
             {formatDueDate(task.dueDate)}
           </div>
         )}
+      </div>
       </div>
     </motion.div>
   );

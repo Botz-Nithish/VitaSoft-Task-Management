@@ -169,20 +169,7 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                   </div>
                 </div>
 
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    STATUS
-                  </label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2535] text-gray-900 dark:text-white focus:border-[#00c48c] focus:ring-2 focus:ring-[#00c48c]/20 outline-none transition-colors"
-                  >
-                    <option value="NOT_STARTED">Not Started</option>
-                    <option value="STARTED">In Progress</option>
-                    <option value="FINISHED">Finished</option>
-                  </select>
-                </div>
+
 
                 {/* Timelines - simplified to end date equivalent to Due Date */}
                 <div className="w-full">
@@ -210,6 +197,32 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                     required
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2535] text-gray-900 dark:text-white focus:border-[#00c48c] focus:ring-2 focus:ring-[#00c48c]/20 outline-none resize-none transition-colors"
                   />
+                </div>
+
+                <div className="w-full">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    STATUS
+                  </label>
+                  <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-full">
+                    {[
+                      { value: 'NOT_STARTED', label: 'Not Started' },
+                      { value: 'STARTED', label: 'In Progress' },
+                      { value: 'FINISHED', label: 'Finished' }
+                    ].map((s) => (
+                      <button
+                        type="button"
+                        key={s.value}
+                        onClick={() => setStatus(s.value as TaskStatus)}
+                        className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
+                          status === s.value 
+                            ? 'bg-white dark:bg-[#1a2535] text-[#00c48c] shadow-sm border border-gray-200 dark:border-gray-700' 
+                            : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
               </form>
