@@ -87,6 +87,7 @@ const LoginPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
             
             <div>
@@ -97,6 +98,7 @@ const LoginPage: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
               />
               <div className="flex justify-end mt-2">
                 <a href="#" className="text-sm font-medium text-[#00c48c] hover:text-[#00a878]">

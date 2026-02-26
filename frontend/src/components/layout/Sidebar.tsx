@@ -63,7 +63,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { name: uiText.navigation.dashboard, path: '/', icon: Squares2X2Icon },
     { name: uiText.navigation.calendar, path: '/calendar', icon: CalendarIcon },
-    { name: uiText.navigation.settings, path: '#settings', icon: Cog6ToothIcon }, // Settings is a placeholder
   ];
 
   return (

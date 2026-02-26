@@ -110,6 +110,7 @@ const RegisterPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
             
             <Input
@@ -119,6 +120,7 @@ const RegisterPage: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="new-password"
             />
 
             <Button type="submit" className="w-full py-3 mt-6" isLoading={isLoading}>

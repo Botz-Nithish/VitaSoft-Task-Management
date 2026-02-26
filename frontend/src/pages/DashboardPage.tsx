@@ -39,14 +39,6 @@ const DashboardPage: React.FC = () => {
   const [priorityFilters, setPriorityFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<string>('CREATED_DESC');
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin w-8 h-8 rounded-full border-t-2 border-b-2 border-[#00c48c]"></div>
-      </div>
-    );
-  }
-
   const finishedCount = tasks.filter(t => t.status === 'FINISHED').length;
   const startedCount = tasks.filter(t => t.status === 'STARTED').length;
   const notStartedCount = tasks.filter(t => t.status === 'NOT_STARTED').length;
@@ -88,6 +80,14 @@ const DashboardPage: React.FC = () => {
 
     return result;
   }, [tasks, statusFilters, priorityFilters, sortBy]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin w-8 h-8 rounded-full border-t-2 border-b-2 border-[#00c48c]"></div>
+      </div>
+    );
+  }
 
   const handleOpenCreateMode = () => {
     setEditingTask(undefined);

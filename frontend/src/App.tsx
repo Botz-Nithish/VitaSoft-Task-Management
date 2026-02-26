@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from './app/store';
@@ -14,8 +15,14 @@ import Layout from './components/layout/Layout';
 import ToastContainer from './components/ui/ToastContainer';
 import PageTransition from './components/ui/PageTransition';
 
+const API_URL = import.meta.env.VITE_API_URL as string ?? 'http://localhost:3000';
+
 function App() {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+  useEffect(() => {
+    fetch(`${API_URL}/health`).catch(() => {/* silent wake-up ping */});
+  }, []);
 
   return (
     <>
