@@ -2,6 +2,7 @@
 .claude/
 clauder/
 
+# ── Backend ──────────────────────────────────────────────
 # Environment variables
 backend/.env
 backend/.env.*
@@ -14,13 +15,22 @@ backend/node_modules/
 backend/dist/
 backend/generated/
 
-# Prisma generated client (regenerated via prisma generate)
-backend/node_modules/.prisma/
-
 # Logs
 *.log
 npm-debug.log*
 
-# OS
+# ── Frontend ─────────────────────────────────────────────
+# Environment variables (never commit real values)
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Dependencies
+frontend/node_modules/
+
+# Build output
+frontend/dist/
+
+# ── OS ───────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
