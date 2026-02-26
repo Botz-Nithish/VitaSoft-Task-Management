@@ -10,6 +10,9 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * @param dto - {RegisterDto} registration payload (name: string, email: string, password: string)
+   */
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register a new user' })
@@ -20,6 +23,9 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
+  /**
+   * @param dto - {LoginDto} login credentials (email: string, password: string)
+   */
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Login and receive a JWT' })

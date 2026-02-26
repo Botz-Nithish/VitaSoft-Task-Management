@@ -7,6 +7,7 @@ import VelocityChart from '../components/dashboard/VelocityChart';
 import StatusDistributionChart from '../components/dashboard/StatusDistributionChart';
 import TaskList from '../components/dashboard/TaskList';
 import CreateEditTaskModal from '../components/tasks/CreateEditTaskModal';
+import ViewTaskModal from '../components/tasks/ViewTaskModal';
 import type { Task } from '../types/task.types';
 import { 
   ClipboardDocumentListIcon, 
@@ -27,6 +28,9 @@ const DashboardPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
   
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingTask, setViewingTask] = useState<Task | undefined>(undefined);
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<Task | undefined>(undefined);
 
@@ -93,6 +97,11 @@ const DashboardPage: React.FC = () => {
   const handleOpenEditMode = (task: Task) => {
     setEditingTask(task);
     setIsModalOpen(true);
+  };
+
+  const handleOpenViewMode = (task: Task) => {
+    setViewingTask(task);
+    setIsViewModalOpen(true);
   };
 
   const handleDeleteRequest = (task: Task) => {
@@ -234,6 +243,7 @@ const DashboardPage: React.FC = () => {
         <TaskList 
           tasks={processedTasks} 
           onEdit={handleOpenEditMode} 
+          onView={handleOpenViewMode}
           onDelete={handleDeleteRequest} 
           onStatusChange={handleStatusChange}
           onAddFirst={handleOpenCreateMode}
@@ -244,6 +254,12 @@ const DashboardPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         taskToEdit={editingTask}
+      />
+
+      <ViewTaskModal 
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        task={viewingTask}
       />
 
       <ConfirmModal

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 interface TaskListProps {
   tasks: Task[];
   onEdit: (task: Task) => void;
+  onView: (task: Task) => void;
   onDelete: (task: Task) => void;
   onStatusChange?: (task: Task, newStatus: import('../../types/task.types').TaskStatus) => void;
   onAddFirst: () => void;
@@ -35,7 +36,7 @@ const EmptyDeskSVG = () => (
   </svg>
 );
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onStatusChange, onAddFirst }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onView, onDelete, onStatusChange, onAddFirst }) => {
   if (tasks.length === 0) {
     return (
       <motion.div 
@@ -61,6 +62,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onEdit, onDelete, onStatusCh
           key={task.id} 
           task={task} 
           onEdit={onEdit} 
+          onView={onView}
           onDelete={onDelete}
           onStatusChange={onStatusChange}
         />

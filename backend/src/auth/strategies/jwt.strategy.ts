@@ -15,6 +15,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  // Passport calls validate() after signature verification.
+  // The returned object is attached to req.user by the framework.
   validate(payload: JwtPayload): RequestUser {
     if (!payload.sub || !payload.email) {
       throw new UnauthorizedException('Invalid token payload');

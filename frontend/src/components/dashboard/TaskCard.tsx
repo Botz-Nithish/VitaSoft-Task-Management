@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 interface TaskCardProps {
   task: Task;
   onEdit: (task: Task) => void;
+  onView: (task: Task) => void;
   onDelete: (task: Task) => void;
   onStatusChange?: (task: Task, newStatus: import('../../types/task.types').TaskStatus) => void;
 }
@@ -16,7 +17,7 @@ const formatDueDate = (dateString: string | null) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusChange }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onStatusChange }) => {
   const [showMenu, setShowMenu] = React.useState(false);
 
   const outerColors = {
@@ -51,9 +52,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusCha
 
   return (
     <motion.div 
+      layoutId={`task-card-${task.id}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl p-[6px] pt-0 ${outerColors[task.priority]} hover:shadow-md transition-shadow relative flex flex-col`}
+      onClick={() => onView(task)}
+      className={`rounded-2xl p-[6px] pt-0 ${outerColors[task.priority]} hover:shadow-md transition-shadow relative flex flex-col cursor-pointer`}
     >
       <div className="flex items-center space-x-2.5 px-3 py-3">
         <span className={`w-3.5 h-3.5 rounded-full ${dotColors[task.priority]}`} />
@@ -102,10 +105,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onDelete, onStatusCha
       
       <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
         <div className="flex items-center space-x-2">
-          <div className="relative inline-block hover:opacity-90 transition-opacity">
+          <div 
+            className="relative inline-block hover:opacity-90 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
             <select
               value={task.status}
-              onChange={(e) => onStatusChange?.(task, e.target.value as any)}
+              onChange={(e) => {
+                e.stopPropagation();
+                onStatusChange?.(task, e.target.value as any);
+              }}
               className={`text-xs font-semibold pl-3 pr-7 py-1.5 rounded-full cursor-pointer appearance-none outline-none border border-transparent shadow-sm dark:shadow-none hover:shadow ${statusStyles[task.status]}`}
             >
               {Object.entries(statusLabels).map(([key, label]) => (

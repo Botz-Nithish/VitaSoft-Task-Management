@@ -6,20 +6,22 @@ import {
   IsDateString,
   MaxLength,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { TaskStatus, TaskPriority } from '@prisma/client';
 
-export class CreateTaskDto {
-  @ApiProperty({ example: 'Fix login bug', maxLength: 255 })
+export class TaskDto {
+  @ApiPropertyOptional({ example: 'Fix login bug', maxLength: 255 })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Title is required' })
+  @IsNotEmpty({ message: 'Title must not be empty if provided' })
   @MaxLength(255, { message: 'Title must not exceed 255 characters' })
-  title!: string;
+  title?: string;
 
-  @ApiProperty({ example: 'The login page throws 500 on wrong password.' })
+  @ApiPropertyOptional({ example: 'The login page throws 500 on wrong password.' })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Description is required' })
-  description!: string;
+  @IsNotEmpty({ message: 'Description must not be empty if provided' })
+  description?: string;
 
   @ApiPropertyOptional({ example: 'Bug', maxLength: 100 })
   @IsOptional()

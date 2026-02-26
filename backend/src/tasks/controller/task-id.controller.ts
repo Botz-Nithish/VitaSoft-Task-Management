@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Patch,
   Delete,
   Body,
@@ -11,52 +10,24 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import { TasksService } from './tasks.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { GetUser } from '../common/decorators/get-user.decorator';
-import type { RequestUser } from '../common/interfaces/authenticated-request.interface';
+import { TasksService } from '../tasks.service';
+import { TaskDto } from '../dto/task.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { GetUser } from '../../common/decorators/get-user.decorator';
+import type { RequestUser } from '../../common/interfaces/authenticated-request.interface';
 import type { Task } from '@prisma/client';
 
 @ApiTags('Tasks')
 @ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard)
 @Controller('tasks')
-export class TasksController {
+export class TaskIdController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new task' })
-  @ApiResponse({ status: 201, description: 'Task created successfully.' })
-  @ApiResponse({ status: 400, description: 'Validation error.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  create(
-    @GetUser() user: RequestUser,
-    @Body() dto: CreateTaskDto,
-  ): Promise<Task> {
-    return this.tasksService.create(user.id, dto);
-  }
-
-  @Get('types')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all distinct task types for the current user' })
-  @ApiResponse({ status: 200, description: 'List of task type strings.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  getTypes(@GetUser() user: RequestUser): Promise<string[]> {
-    return this.tasksService.getTypes(user.id);
-  }
-
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all tasks for the current user' })
-  @ApiResponse({ status: 200, description: 'List of tasks.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  findAll(@GetUser() user: RequestUser): Promise<Task[]> {
-    return this.tasksService.findAll(user.id);
-  }
-
+  /**
+   * @param user - {RequestUser} authenticated user extracted from JWT ({ id: string, email: string })
+   * @param id - {string} task UUID from route param
+   */
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get a single task by ID' })
@@ -71,6 +42,11 @@ export class TasksController {
     return this.tasksService.findOne(user.id, id);
   }
 
+  /**
+   * @param user - {RequestUser} authenticated user extracted from JWT ({ id: string, email: string })
+   * @param id - {string} task UUID from route param
+   * @param dto - {TaskDto} partial task fields to apply (all optional: title?, description?, taskType?, status?, priority?, dueDate?)
+   */
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update a task by ID' })
@@ -82,11 +58,15 @@ export class TasksController {
   update(
     @GetUser() user: RequestUser,
     @Param('id') id: string,
-    @Body() dto: UpdateTaskDto,
+    @Body() dto: TaskDto,
   ): Promise<Task> {
     return this.tasksService.update(user.id, id, dto);
   }
 
+  /**
+   * @param user - {RequestUser} authenticated user extracted from JWT ({ id: string, email: string })
+   * @param id - {string} task UUID from route param
+   */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a task by ID' })
