@@ -80,7 +80,7 @@ const RegisterPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto">
           {/* Logo Placeholder */}
           <div className="flex items-center space-x-2 mb-12">
-            <img src="/logo.svg" alt={`${uiText.app.name} Logo`} className="w-8 h-8" />
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt={`${uiText.app.name} Logo`} className="w-8 h-8" />
             <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{uiText.app.name}</span>
           </div>
           

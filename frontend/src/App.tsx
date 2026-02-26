@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       <PageTransition />
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <ToastContainer />
         <Routes>
           <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />

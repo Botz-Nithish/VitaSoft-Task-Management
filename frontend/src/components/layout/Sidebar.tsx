@@ -83,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div>
           <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800">
             <div className="flex items-center">
-              <img src="/logo.svg" alt={`${uiText.app.name} Logo`} className="w-7 h-7 mr-2.5" />
+              <img src={`${import.meta.env.BASE_URL}logo.svg`} alt={`${uiText.app.name} Logo`} className="w-7 h-7 mr-2.5" />
               <h1 className="text-xl font-bold text-[#00c48c] tracking-tight">{uiText.app.name}</h1>
             </div>
             

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TaskSphere</title>
     <script>
@@ -12,7 +12,8 @@
         var p = params.get('p');
         if (p) {
           var q = params.get('q') ? '?' + params.get('q').replace(/~and~/g, '&') : '';
-          window.history.replaceState(null, '', p + q + window.location.hash);
+          // Strip leading slash so the path resolves relative to the base (preserves the repo subpath)
+          window.history.replaceState(null, '', p.replace(/^\//, '') + q + window.location.hash);
         }
       })();
     </script>
