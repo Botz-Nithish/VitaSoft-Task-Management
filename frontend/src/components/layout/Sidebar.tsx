@@ -12,6 +12,7 @@ import {
   ArrowRightOnRectangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import uiText from '../../data.json';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -60,9 +61,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: Squares2X2Icon },
-    { name: 'Calendar', path: '/calendar', icon: CalendarIcon },
-    { name: 'Settings', path: '#settings', icon: Cog6ToothIcon }, // Settings is a placeholder
+    { name: uiText.navigation.dashboard, path: '/', icon: Squares2X2Icon },
+    { name: uiText.navigation.calendar, path: '/calendar', icon: CalendarIcon },
+    { name: uiText.navigation.settings, path: '#settings', icon: Cog6ToothIcon }, // Settings is a placeholder
   ];
 
   return (
@@ -84,8 +85,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div>
           <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800">
             <div className="flex items-center">
-              <img src="/logo.svg" alt="TaskSphere Logo" className="w-7 h-7 mr-2.5" />
-              <h1 className="text-xl font-bold text-[#00c48c] tracking-tight">TaskSphere</h1>
+              <img src="/logo.svg" alt={`${uiText.app.name} Logo`} className="w-7 h-7 mr-2.5" />
+              <h1 className="text-xl font-bold text-[#00c48c] tracking-tight">{uiText.app.name}</h1>
             </div>
             
             {/* Close button strictly for Mobile */}
@@ -138,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
           <button
             onClick={handleLogout}
-            title="Logout"
+            title={uiText.navigation.logout}
             className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors"
           >
             <ArrowRightOnRectangleIcon className="w-5 h-5" />

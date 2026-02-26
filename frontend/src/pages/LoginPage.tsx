@@ -6,6 +6,7 @@ import { loginSuccess } from '../features/auth/authSlice';
 import { startTransition } from '../features/ui/transitionSlice';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import uiText from '../data.json';
 
 // Decorative generic floating blocks SVG for the right panel
 const GeometricBlocksSVG = () => (
@@ -65,12 +66,12 @@ const LoginPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto">
           {/* Logo Placeholder */}
           <div className="flex items-center space-x-2 mb-12">
-            <img src="/logo.svg" alt="TaskSphere Logo" className="w-8 h-8" />
-            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">TaskSphere</span>
+            <img src="/logo.svg" alt={`${uiText.app.name} Logo`} className="w-8 h-8" />
+            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{uiText.app.name}</span>
           </div>
           
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Welcome back.</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-8">Sign in to your secure workspace to continue.</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{uiText.auth.login.title}</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">{uiText.auth.login.subtitle}</p>
           
           {error && (
             <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
@@ -80,7 +81,7 @@ const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
-              label="Email Address"
+              label={uiText.auth.login.emailLabel}
               type="email"
               placeholder="name@example.com"
               value={email}
@@ -90,7 +91,7 @@ const LoginPage: React.FC = () => {
             
             <div>
               <Input
-                label="Password"
+                label={uiText.auth.login.passwordLabel}
                 type="password"
                 placeholder="••••••••"
                 value={password}
@@ -99,13 +100,13 @@ const LoginPage: React.FC = () => {
               />
               <div className="flex justify-end mt-2">
                 <a href="#" className="text-sm font-medium text-[#00c48c] hover:text-[#00a878]">
-                  Forgot password?
+                  {uiText.auth.login.forgotPassword}
                 </a>
               </div>
             </div>
 
             <Button type="submit" className="w-full py-3 mt-4" isLoading={isLoading}>
-              SIGN IN
+              {uiText.auth.login.submitButton}
             </Button>
           </form>
 
@@ -131,12 +132,12 @@ const LoginPage: React.FC = () => {
           </div>
           
           <p className="mt-8 text-center text-sm text-gray-500">
-            Don't have an account? <Link to="/register" className="font-semibold text-[#00c48c] hover:underline">Sign up</Link>
+            {uiText.auth.login.noAccountText} <Link to="/register" className="font-semibold text-[#00c48c] hover:underline">{uiText.auth.login.noAccountLink}</Link>
           </p>
         </div>
         
         <div className="mt-auto pt-12 items-center text-xs text-gray-400">
-          <span>&copy; {new Date().getFullYear()} TaskSphere. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} {uiText.app.name}. All rights reserved.</span>
           <span className="mx-2">|</span>
           <a href="#" className="hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</a>
           <span className="mx-2">|</span>

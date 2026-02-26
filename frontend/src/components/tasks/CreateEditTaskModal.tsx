@@ -7,6 +7,7 @@ import Button from '../ui/Button';
 import Input from '../ui/Input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/24/outline'; // adjusted for standard usage
+import uiText from '../../data.json';
 
 interface CreateEditTaskModalProps {
   isOpen: boolean;
@@ -54,6 +55,19 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate Date (Cannot be in the past)
+    if (dueDate) {
+      const selectedDate = new Date(dueDate);
+      const today = new Date();
+      selectedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        addToast('Past dates are not allowed for Task Timelines.', 'error');
+        return;
+      }
+    }
+
     // Normalize payload
     const payload = {
       title,
@@ -105,7 +119,7 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
           >
             <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-800 shrink-0">
               <h2 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {isEditMode ? 'Edit Task' : 'Create Task'}
+                {isEditMode ? uiText.tasks.modals.edit.title : uiText.tasks.modals.create.title}
               </h2>
               <button 
                 onClick={onClose}
@@ -119,8 +133,8 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
               <form id="task-form" onSubmit={handleSubmit} className="space-y-6 w-full">
                 
                 <Input
-                  label="PROJECT TITLE"
-                  placeholder="e.g. Q4 Database Migration"
+                  label={uiText.tasks.fields.title}
+                  placeholder={uiText.tasks.fields.titlePlaceholder}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
@@ -129,7 +143,7 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                 {/* Combobox logic for TYPE */}
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    TYPE
+                    {uiText.tasks.fields.type}
                   </label>
                   <input
                     type="text"
@@ -149,7 +163,7 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                 {/* segmented toggle for PRIORITY */}
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    PRIORITY
+                    {uiText.tasks.fields.priority}
                   </label>
                   <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-full">
                     {(['LOW', 'MEDIUM', 'HIGH'] as TaskPriority[]).map((p) => (
@@ -174,7 +188,7 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                 {/* Timelines - simplified to end date equivalent to Due Date */}
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    TIMELINE (END DATE)
+                    {uiText.tasks.fields.dueDate}
                   </label>
                   <input
                     type="date"
@@ -187,11 +201,11 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
 
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    DESCRIPTION
+                    {uiText.tasks.fields.description}
                   </label>
                   <textarea
                     rows={4}
-                    placeholder="Enter details about this task..."
+                    placeholder={uiText.tasks.fields.descriptionPlaceholder}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     required
@@ -201,13 +215,13 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
 
                 <div className="w-full">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    STATUS
+                    {uiText.tasks.fields.status}
                   </label>
                   <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-full">
                     {[
-                      { value: 'NOT_STARTED', label: 'Not Started' },
-                      { value: 'STARTED', label: 'In Progress' },
-                      { value: 'FINISHED', label: 'Finished' }
+                      { value: 'NOT_STARTED', label: uiText.filters.status.pending },
+                      { value: 'STARTED', label: uiText.filters.status.inProgress },
+                      { value: 'FINISHED', label: uiText.filters.status.completed }
                     ].map((s) => (
                       <button
                         type="button"
@@ -230,10 +244,10 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
 
             <div className="p-6 border-t border-gray-100 dark:border-gray-800 shrink-0 flex justify-end space-x-3 bg-gray-50/50 dark:bg-gray-800/20 rounded-b-2xl">
               <Button type="button" variant="secondary" onClick={onClose} disabled={isLoading}>
-                CANCEL
+                {uiText.tasks.modals.delete.cancel.toUpperCase()}
               </Button>
               <Button type="submit" form="task-form" isLoading={isLoading}>
-                {isEditMode ? 'SAVE CHANGES' : '+ CREATE TASK'}
+                {isEditMode ? uiText.tasks.modals.edit.submit.toUpperCase() : uiText.tasks.modals.create.submit.toUpperCase()}
               </Button>
             </div>
 

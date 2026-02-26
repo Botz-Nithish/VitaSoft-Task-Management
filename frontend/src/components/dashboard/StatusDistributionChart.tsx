@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import type { Task } from '../../types/task.types';
+import uiText from '../../data.json';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -68,7 +69,7 @@ const StatusDistributionChart: React.FC<StatusDistributionChartProps> = ({ tasks
   return (
     <div className="bg-white dark:bg-[#1a2535] p-6 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col h-[350px]">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Project Progress</h3>
+        <h3 className="font-semibold text-gray-900 dark:text-white">{uiText.charts.distribution.title}</h3>
         <select 
           value={filter} 
           onChange={(e) => setFilter(e.target.value as any)}
@@ -95,7 +96,7 @@ const StatusDistributionChart: React.FC<StatusDistributionChartProps> = ({ tasks
               <circle cx="100" cy="100" r="15" fill="white" opacity="0.5"/>
             </svg>
           </div>
-          <h4 className="text-gray-900 dark:text-white font-medium mb-1">No tasks found</h4>
+          <h4 className="text-gray-900 dark:text-white font-medium mb-1">{uiText.charts.distribution.noData}</h4>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             There is no data available for the <span className="font-semibold">{filter.toLowerCase()}</span> priority.
           </p>
@@ -108,7 +109,7 @@ const StatusDistributionChart: React.FC<StatusDistributionChartProps> = ({ tasks
           {/* Efficiency Center Text positioned near bottom of semi-circle */}
           <div className="absolute bottom-16 left-0 right-0 flex flex-col items-center justify-center pointer-events-none">
             <span className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white">{efficiency}%</span>
-            <span className="text-sm text-gray-500 font-medium mb-8">Project Ended</span>
+            <span className="text-sm text-gray-500 font-medium mb-8">Task Status</span>
           </div>
         </div>
       )}

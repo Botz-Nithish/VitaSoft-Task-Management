@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import type { Task } from '../../types/task.types';
+import uiText from '../../data.json';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler, Legend);
 
@@ -78,7 +79,7 @@ const VelocityChart: React.FC<VelocityChartProps> = ({ tasks }) => {
     datasets: [
       {
         fill: true,
-        label: 'Tasks Completed',
+        label: uiText.charts.velocity.completedTasks,
         data: dataPoints,
         borderColor: '#00c48c',
         backgroundColor: 'rgba(0, 196, 140, 0.1)',
@@ -116,7 +117,7 @@ const VelocityChart: React.FC<VelocityChartProps> = ({ tasks }) => {
   return (
     <div className="bg-white dark:bg-[#1a2535] p-6 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col h-[350px]">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Project Velocity</h3>
+        <h3 className="font-semibold text-gray-900 dark:text-white">{uiText.charts.velocity.title}</h3>
         <div className="flex bg-gray-100 dark:bg-gray-800 rounded-md p-1">
           {['W', 'M', 'Y'].map(t => (
             <button

@@ -1,0 +1,134 @@
+{
+  "app": {
+    "name": "TaskSphere",
+    "tagline": "Secure Task Management"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Please enter your details to sign in",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submitButton": "Sign in",
+      "loadingButton": "Signing in...",
+      "noAccountText": "Don't have an account?",
+      "noAccountLink": "Sign up"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Sign up to get started with TaskSphere",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "submitButton": "Sign up",
+      "loadingButton": "Creating account...",
+      "hasAccountText": "Already have an account?",
+      "hasAccountLink": "Sign in"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "dashboard": {
+    "stats": {
+      "total": "Total Tasks",
+      "finished": "Completed",
+      "inProgress": "In Progress",
+      "pending": "Pending",
+      "notStarted": "Not Started"
+    },
+    "sections": {
+      "workstreams": "Active Workstreams"
+    },
+    "buttons": {
+      "addTask": "+ Add Task"
+    }
+  },
+  "calendar": {
+    "header": {
+      "title": "Calendar View",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    }
+  },
+  "filters": {
+    "button": "Filter",
+    "status": {
+      "title": "Status",
+      "all": "All Status",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "priority": {
+      "title": "Priority",
+      "all": "All Priorities",
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    },
+    "sort": {
+      "newest": "Newest First",
+      "oldest": "Oldest First",
+      "dueDate": "Due Date",
+      "priority": "Priority"
+    },
+    "multipleSelected": "Multiple Selected",
+    "clearAll": "Clear Filters"
+  },
+  "tasks": {
+    "modals": {
+      "create": {
+        "title": "Create New Task",
+        "submit": "Create Task"
+      },
+      "edit": {
+        "title": "Edit Task",
+        "submit": "Save Changes"
+      },
+      "delete": {
+        "title": "Delete Task",
+        "message": "Are you sure you want to delete this task? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel",
+        "success": "Task deleted successfully"
+      }
+    },
+    "fields": {
+      "title": "Task Title",
+      "titlePlaceholder": "e.g., Design System Update",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the scope and requirements...",
+      "type": "Task Type",
+      "typePlaceholder": "Select category...",
+      "priority": "Priority Level",
+      "dueDate": "Timeline",
+      "datePlaceholder": "Select due date",
+      "status": "Task Status"
+    }
+  },
+  "charts": {
+    "velocity": {
+      "title": "Task Velocity",
+      "subtitle": "Tasks completed over the last 7 days",
+      "completedTasks": "Completed Tasks"
+    },
+    "distribution": {
+      "title": "Task Progress",
+      "subtitle": "Current status of all active workstreams",
+      "allPriorities": "All Priorities",
+      "noData": "No tasks available"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "saving": "Saving..."
+  }
+}

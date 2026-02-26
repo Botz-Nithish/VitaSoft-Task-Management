@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTasks } from '../hooks/useTasks';
 import type { Task } from '../types/task.types';
 import CreateEditTaskModal from '../components/tasks/CreateEditTaskModal';
+import ViewTaskModal from '../components/tasks/ViewTaskModal';
+import TaskFilters from '../components/dashboard/TaskFilters';
 import Button from '../components/ui/Button';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
+import uiText from '../data.json';
 
 // Blank Calendar SVG for Empty State
 const BlankCalendarSVG = () => (
@@ -30,8 +33,29 @@ const CalendarPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
 
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingTask, setViewingTask] = useState<Task | undefined>(undefined);
+
+  // Filters
+  const [statusFilters, setStatusFilters] = useState<string[]>([]);
+  const [priorityFilters, setPriorityFilters] = useState<string[]>([]);
+
   // Filter tasks that have a dueDate
-  const scheduledTasks = tasks.filter(t => t.dueDate);
+  const scheduledTasks = useMemo(() => {
+    let result = tasks.filter(t => t.dueDate);
+    
+    // Status Filter (Multi-select)
+    if (statusFilters.length > 0) {
+      result = result.filter(t => statusFilters.includes(t.status));
+    }
+
+    // Priority Filter (Multi-select)
+    if (priorityFilters.length > 0) {
+      result = result.filter(t => priorityFilters.includes(t.priority));
+    }
+
+    return result;
+  }, [tasks, statusFilters, priorityFilters]);
 
   if (isLoading) {
     return (
@@ -54,8 +78,8 @@ const CalendarPage: React.FC = () => {
   };
 
   const handleTaskClick = (task: Task) => {
-    setEditingTask(task);
-    setIsModalOpen(true);
+    setViewingTask(task);
+    setIsViewModalOpen(true);
   };
 
   const handleOpenCreateMode = () => {
@@ -104,13 +128,17 @@ const CalendarPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <div className="hidden md:flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
-            <button className="px-3 py-1.5 text-sm font-medium rounded-md bg-white dark:bg-[#1a2535] text-[#00c48c] shadow-sm">Month</button>
-            <button className="px-3 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Week</button>
-            <button className="px-3 py-1.5 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Day</button>
-          </div>
-          <Button onClick={handleOpenCreateMode}>+ Add Task</Button>
+        <div className="flex flex-wrap items-center space-x-3 mt-4 sm:mt-0">
+          <TaskFilters
+            statusFilters={statusFilters}
+            priorityFilters={priorityFilters}
+            onStatusChange={setStatusFilters}
+            onPriorityChange={setPriorityFilters}
+            showSort={false}
+          />
+          <Button onClick={handleOpenCreateMode} className="ml-auto sm:ml-2">
+            {uiText.dashboard.buttons.addTask}
+          </Button>
         </div>
       </div>
 
@@ -124,7 +152,7 @@ const CalendarPage: React.FC = () => {
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Nothing scheduled</h3>
           <p className="text-gray-500 dark:text-gray-400 mb-6 font-medium">Tasks with a due date will appear here.</p>
           <Button onClick={handleOpenCreateMode} className="px-6 py-2.5">
-            + Add Task
+            {uiText.dashboard.buttons.addTask}
           </Button>
         </motion.div>
       ) : (
@@ -166,14 +194,15 @@ const CalendarPage: React.FC = () => {
                   
                   <div className="flex-1 space-y-1 overflow-y-auto pr-1 no-scrollbar">
                     {dayTasks.map(task => (
-                      <div 
+                      <motion.div 
+                        layoutId={`task-card-${task.id}`}
                         key={task.id}
                         onClick={() => handleTaskClick(task)}
                         className={`text-xs px-2 py-1 rounded border shadow-sm cursor-pointer truncate text-white transition-opacity hover:opacity-80 ${statusColors[task.status] || 'bg-gray-500'}`}
                         title={task.title}
                       >
                         {task.status === 'FINISHED' ? '✓ ' : ''}{task.title}
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -187,6 +216,12 @@ const CalendarPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         taskToEdit={editingTask}
+      />
+
+      <ViewTaskModal 
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        task={viewingTask}
       />
     </div>
   );

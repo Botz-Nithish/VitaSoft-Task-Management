@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import Button from './Button';
+import uiText from '../../data.json';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -54,14 +55,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 disabled={isLoading}
                 className="flex-1"
               >
-                Cancel
+                {uiText.tasks.modals.delete.cancel}
               </Button>
               <Button 
                 onClick={onConfirm} 
                 isLoading={isLoading}
                 className="flex-1 !bg-red-600 hover:!bg-red-700 !text-white !border-red-600"
               >
-                Delete
+                {uiText.tasks.modals.delete.confirm}
               </Button>
             </div>
           </div>

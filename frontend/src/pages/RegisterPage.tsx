@@ -5,6 +5,7 @@ import { register } from '../api/auth.api';
 import { loginSuccess } from '../features/auth/authSlice';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import uiText from '../data.json';
 
 // Abstract Document / Checklist Concept SVG for the right panel
 const ChecklistConceptSVG = () => (
@@ -79,12 +80,12 @@ const RegisterPage: React.FC = () => {
         <div className="max-w-md w-full mx-auto">
           {/* Logo Placeholder */}
           <div className="flex items-center space-x-2 mb-12">
-            <img src="/logo.svg" alt="TaskSphere Logo" className="w-8 h-8" />
-            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">TaskSphere</span>
+            <img src="/logo.svg" alt={`${uiText.app.name} Logo`} className="w-8 h-8" />
+            <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">{uiText.app.name}</span>
           </div>
           
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Create an account</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-8">Join the platform to organize your life's work.</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{uiText.auth.register.title}</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">{uiText.auth.register.subtitle}</p>
           
           {error && (
             <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
@@ -94,7 +95,7 @@ const RegisterPage: React.FC = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Full Name"
+              label={uiText.auth.register.nameLabel}
               type="text"
               placeholder="Elon Musk"
               value={name}
@@ -103,7 +104,7 @@ const RegisterPage: React.FC = () => {
             />
             
             <Input
-              label="Email Address"
+              label={uiText.auth.register.emailLabel}
               type="email"
               placeholder="name@example.com"
               value={email}
@@ -112,7 +113,7 @@ const RegisterPage: React.FC = () => {
             />
             
             <Input
-              label="Password"
+              label={uiText.auth.register.passwordLabel}
               type="password"
               placeholder="••••••••"
               value={password}
@@ -121,17 +122,17 @@ const RegisterPage: React.FC = () => {
             />
 
             <Button type="submit" className="w-full py-3 mt-6" isLoading={isLoading}>
-              CREATE ACCOUNT
+              {uiText.auth.register.submitButton.toUpperCase()}
             </Button>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-500">
-            Already have an account? <Link to="/login" className="font-semibold text-[#00c48c] hover:underline">Sign in</Link>
+            {uiText.auth.register.hasAccountText} <Link to="/login" className="font-semibold text-[#00c48c] hover:underline">{uiText.auth.register.hasAccountLink}</Link>
           </p>
         </div>
         
         <div className="mt-auto pt-12 items-center text-xs text-gray-400">
-          <span>&copy; {new Date().getFullYear()} TaskSphere. All rights reserved.</span>
+          <span>&copy; {new Date().getFullYear()} {uiText.app.name}. All rights reserved.</span>
           <span className="mx-2">|</span>
           <a href="#" className="hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</a>
           <span className="mx-2">|</span>

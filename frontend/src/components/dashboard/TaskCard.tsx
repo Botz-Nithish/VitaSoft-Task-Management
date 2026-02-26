@@ -73,15 +73,18 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
         
         <div className="relative">
           <button 
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
             onBlur={() => setTimeout(() => setShowMenu(false), 200)}
-            className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+            className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors relative z-20"
           >
             <EllipsisVerticalIcon className="w-5 h-5" />
           </button>
           
           {showMenu && (
-            <div className="absolute right-0 top-8 w-36 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-10">
+            <div 
+              className="absolute right-0 top-8 w-36 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-30"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button 
                 onClick={(e) => { e.stopPropagation(); onEdit(task); setShowMenu(false); }}
                 className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"

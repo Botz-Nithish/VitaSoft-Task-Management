@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { BellIcon, SunIcon, MoonIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import uiText from '../../data.json';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -14,11 +15,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const getPageTitle = () => {
     switch (location.pathname) {
       case '/':
-        return 'Dashboard';
+        return uiText.navigation.dashboard;
       case '/calendar':
-        return 'Calendar';
+        return uiText.navigation.calendar;
       default:
-        return 'Overview';
+        return uiText.navigation.dashboard;
     }
   };
 
