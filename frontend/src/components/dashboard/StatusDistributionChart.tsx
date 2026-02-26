@@ -72,7 +72,7 @@ const StatusDistributionChart: React.FC<StatusDistributionChartProps> = ({ tasks
         <h3 className="font-semibold text-gray-900 dark:text-white">{uiText.charts.distribution.title}</h3>
         <select 
           value={filter} 
-          onChange={(e) => setFilter(e.target.value as any)}
+          onChange={(e) => setFilter(e.target.value as 'ALL' | 'LOW' | 'MEDIUM' | 'HIGH')}
           className="text-sm bg-gray-50 border border-gray-200 text-gray-900 rounded-lg focus:ring-[#10B77F] focus:border-[#10B77F] block py-1.5 px-3 dark:bg-[#0d1f2d] dark:border-gray-700 dark:placeholder-gray-400 dark:text-white outline-none"
         >
           <option value="ALL">All Priorities</option>

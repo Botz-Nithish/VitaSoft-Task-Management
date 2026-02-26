@@ -5,10 +5,9 @@ import type { RootState } from '../../app/store';
 import { logout } from '../../features/auth/authSlice';
 import { startTransition } from '../../features/ui/transitionSlice';
 import { logoutApi } from '../../api/auth.api';
-import { 
-  Squares2X2Icon, 
-  CalendarIcon, 
-  Cog6ToothIcon,
+import {
+  Squares2X2Icon,
+  CalendarIcon,
   ArrowRightOnRectangleIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';

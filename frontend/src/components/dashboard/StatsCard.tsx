@@ -4,7 +4,7 @@ interface StatsCardProps {
   title: string;
   count: number;
   total?: number;
-  colorClass: string;
+  colorClass?: string;
   icon: React.ReactNode;
   isPrimary?: boolean;
 }

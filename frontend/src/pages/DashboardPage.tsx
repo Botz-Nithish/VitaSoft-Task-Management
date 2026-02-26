@@ -9,7 +9,7 @@ import TaskList from '../components/dashboard/TaskList';
 import TaskFilters from '../components/dashboard/TaskFilters';
 import CreateEditTaskModal from '../components/tasks/CreateEditTaskModal';
 import ViewTaskModal from '../components/tasks/ViewTaskModal';
-import type { Task } from '../types/task.types';
+import type { Task, TaskStatus } from '../types/task.types';
 import uiText from '../data.json';
 import { 
   ClipboardDocumentListIcon, 
@@ -121,8 +121,8 @@ const DashboardPage: React.FC = () => {
     }
   };
 
-  const handleStatusChange = (task: Task, newStatus: string) => {
-    updateTask.mutate({ id: task.id, payload: { status: newStatus as any } }, {
+  const handleStatusChange = (task: Task, newStatus: TaskStatus) => {
+    updateTask.mutate({ id: task.id, payload: { status: newStatus } }, {
       onSuccess: () => {
         addToast(`Task status updated to ${newStatus.replace('_', ' ')}`, 'success');
       },

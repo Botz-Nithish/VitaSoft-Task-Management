@@ -122,7 +122,7 @@ const VelocityChart: React.FC<VelocityChartProps> = ({ tasks }) => {
           {['W', 'M', 'Y'].map(t => (
             <button
               key={t}
-              onClick={() => setView(t as any)}
+              onClick={() => setView(t as 'W' | 'M' | 'Y')}
               className={`px-3 py-1 text-xs font-semibold rounded transition-colors ${
                 view === t 
                   ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' 

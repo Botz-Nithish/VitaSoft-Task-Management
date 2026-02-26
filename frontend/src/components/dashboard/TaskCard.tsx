@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Task } from '../../types/task.types';
+import type { Task, TaskStatus } from '../../types/task.types';
 import { EllipsisVerticalIcon, CalendarIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 
@@ -8,7 +8,7 @@ interface TaskCardProps {
   onEdit: (task: Task) => void;
   onView: (task: Task) => void;
   onDelete: (task: Task) => void;
-  onStatusChange?: (task: Task, newStatus: import('../../types/task.types').TaskStatus) => void;
+  onStatusChange?: (task: Task, newStatus: TaskStatus) => void;
 }
 
 const formatDueDate = (dateString: string | null) => {
@@ -116,7 +116,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
               value={task.status}
               onChange={(e) => {
                 e.stopPropagation();
-                onStatusChange?.(task, e.target.value as any);
+                onStatusChange?.(task, e.target.value as TaskStatus);
               }}
               className={`text-xs font-semibold pl-3 pr-7 py-1.5 rounded-full cursor-pointer appearance-none outline-none border border-transparent shadow-sm dark:shadow-none hover:shadow ${statusStyles[task.status]}`}
             >

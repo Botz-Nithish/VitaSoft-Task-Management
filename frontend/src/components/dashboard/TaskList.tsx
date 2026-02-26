@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Task } from '../../types/task.types';
+import type { Task, TaskStatus } from '../../types/task.types';
 import TaskCard from './TaskCard';
 import Button from '../ui/Button';
 import { motion } from 'framer-motion';
@@ -9,7 +9,7 @@ interface TaskListProps {
   onEdit: (task: Task) => void;
   onView: (task: Task) => void;
   onDelete: (task: Task) => void;
-  onStatusChange?: (task: Task, newStatus: import('../../types/task.types').TaskStatus) => void;
+  onStatusChange?: (task: Task, newStatus: TaskStatus) => void;
   onAddFirst: () => void;
 }
 
