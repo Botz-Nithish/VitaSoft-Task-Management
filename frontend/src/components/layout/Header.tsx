@@ -6,9 +6,11 @@ import uiText from '../../data.json';
 
 interface HeaderProps {
   onMenuClick: () => void;
+  onBellClick: () => void;
+  upcomingCount: number;
 }
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({ onMenuClick, onBellClick, upcomingCount }) => {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
@@ -46,9 +48,17 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           {theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
         </button>
         
-        <button className="p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 rounded-full transition-colors relative">
+        <button
+          onClick={onBellClick}
+          title="Reminders"
+          className="p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 rounded-full transition-colors relative"
+        >
           <BellIcon className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#ef4444] rounded-full"></span>
+          {upcomingCount > 0 && (
+            <span className="absolute top-1 right-1 min-w-[16px] h-4 bg-[#ef4444] rounded-full text-white text-[9px] font-bold flex items-center justify-center px-0.5">
+              {upcomingCount > 9 ? '9+' : upcomingCount}
+            </span>
+          )}
         </button>
       </div>
     </header>
