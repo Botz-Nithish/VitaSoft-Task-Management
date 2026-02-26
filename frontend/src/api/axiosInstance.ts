@@ -3,7 +3,7 @@ import { store } from '../app/store';
 import { logout } from '../features/auth/authSlice';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL as string ?? 'http://localhost:3000',
 });
 
 // Attach token to every request

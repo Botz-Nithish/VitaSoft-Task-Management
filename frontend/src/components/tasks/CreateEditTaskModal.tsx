@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCreateTask, useUpdateTask } from '../../hooks/useTasks'; // adjusted path
 import { useTaskTypes } from '../../hooks/useTaskTypes';
 import { useToast } from '../../context/ToastContext';
@@ -26,6 +26,8 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [taskType, setTaskType] = useState('');
+  const [typeOpen, setTypeOpen] = useState(false);
+  const typeRef = useRef<HTMLDivElement>(null);
   const [priority, setPriority] = useState<TaskPriority>('MEDIUM');
   const [status, setStatus] = useState<TaskStatus>('NOT_STARTED');
   const [dueDate, setDueDate] = useState('');
@@ -140,24 +142,33 @@ const CreateEditTaskModal: React.FC<CreateEditTaskModalProps> = ({ isOpen, onClo
                   required
                 />
 
-                {/* Combobox logic for TYPE */}
-                <div className="w-full">
+                {/* Custom themed combobox for TYPE */}
+                <div className="w-full relative" ref={typeRef}>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {uiText.tasks.fields.type}
                   </label>
                   <input
                     type="text"
-                    list="task-types"
                     placeholder="e.g. Bug Fix"
                     value={taskType}
-                    onChange={(e) => setTaskType(e.target.value)}
+                    onChange={(e) => { setTaskType(e.target.value); setTypeOpen(true); }}
+                    onFocus={() => setTypeOpen(true)}
+                    onBlur={() => setTimeout(() => setTypeOpen(false), 150)}
                     className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1a2535] text-gray-900 dark:text-white focus:border-[#00c48c] focus:ring-2 focus:ring-[#00c48c]/20 outline-none transition-colors"
                   />
-                  <datalist id="task-types">
-                    {taskTypes.map((type: string) => (
-                      <option key={type} value={type} />
-                    ))}
-                  </datalist>
+                  {typeOpen && taskTypes.filter((t: string) => t.toLowerCase().includes(taskType.toLowerCase())).length > 0 && (
+                    <ul className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a2535] shadow-lg max-h-48 overflow-y-auto">
+                      {taskTypes.filter((t: string) => t.toLowerCase().includes(taskType.toLowerCase())).map((t: string) => (
+                        <li
+                          key={t}
+                          onMouseDown={() => { setTaskType(t); setTypeOpen(false); }}
+                          className="px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-[#00c48c]/10 hover:text-[#00c48c] cursor-pointer transition-colors"
+                        >
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
 
                 {/* segmented toggle for PRIORITY */}

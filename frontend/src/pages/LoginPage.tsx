@@ -53,7 +53,8 @@ const LoginPage: React.FC = () => {
       }, 400);
 
     } catch (err: any) {
-      setError(err.response?.data?.message?.[0] || err.response?.data?.message || 'Invalid credentials.');
+      const msg = err.response?.data?.message;
+      setError(Array.isArray(msg) ? msg[0] : msg || 'Invalid credentials.');
       setIsLoading(false);
     } 
   };
