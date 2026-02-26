@@ -34,10 +34,13 @@ jobs:
         run: |
           mkdir -p ./deploy
           cp -r backend/dist         ./deploy/dist
-          cp -r backend/node_modules ./deploy/node_modules
           cp    backend/package.json ./deploy/package.json
           cp    backend/package-lock.json ./deploy/package-lock.json
-          cd ./deploy && npm prune --production && rm package-lock.json
+          # Prune devDeps in-place — preserves .prisma/client (not a listed package)
+          cd backend && npm prune --production && cd ..
+          # Create node_modules.tar.gz Azure's startup script expects
+          tar -czf ./deploy/node_modules.tar.gz -C backend/node_modules .
+          rm ./deploy/package-lock.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
