@@ -86,7 +86,8 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
                 {[
                   { id: 'NOT_STARTED', label: uiText.filters.status.pending },
                   { id: 'STARTED', label: uiText.filters.status.inProgress },
-                  { id: 'FINISHED', label: uiText.filters.status.completed }
+                  { id: 'FINISHED', label: uiText.filters.status.completed },
+                  { id: 'OVERDUE', label: uiText.filters.status.overdue }
                 ].map(status => (
                   <label key={status.id} className="flex items-center space-x-3 cursor-pointer group">
                     <input 
@@ -152,6 +153,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({
           <option value="NOT_STARTED">{uiText.filters.status.pending}</option>
           <option value="STARTED">{uiText.filters.status.inProgress}</option>
           <option value="FINISHED">{uiText.filters.status.completed}</option>
+          <option value="OVERDUE">{uiText.filters.status.overdue}</option>
           {statusFilters.length > 1 && <option value="MULTIPLE" disabled>{uiText.filters.multipleSelected}</option>}
         </select>
       </div>

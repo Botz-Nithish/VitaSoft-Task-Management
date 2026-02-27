@@ -9,6 +9,9 @@ interface TaskCardProps {
   onView: (task: Task) => void;
   onDelete: (task: Task) => void;
   onStatusChange?: (task: Task, newStatus: TaskStatus) => void;
+  isBulkMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (id: string) => void;
 }
 
 const getDaysUntilDue = (dueDate: string): number => {
@@ -43,7 +46,10 @@ const progressFill: Record<TaskStatus, number> = {
   FINISHED: 3,
 };
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onStatusChange }) => {
+const TaskCard: React.FC<TaskCardProps> = ({
+  task, onEdit, onView, onDelete, onStatusChange,
+  isBulkMode = false, isSelected = false, onToggleSelect
+}) => {
   const [showMenu, setShowMenu] = React.useState(false);
 
   const isOverdue = !!task.dueDate && task.status !== 'FINISHED' && getDaysUntilDue(task.dueDate) < 0;
@@ -80,16 +86,34 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
     NOT_STARTED: 'Not Started'
   };
 
+  const handleCardClick = () => {
+    if (isBulkMode) {
+      onToggleSelect?.(task.id);
+    } else {
+      onView(task);
+    }
+  };
+
   return (
     <motion.div
       layoutId={`task-card-${task.id}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      onClick={() => onView(task)}
-      className={`rounded-2xl p-[6px] pt-0 ${outerColors[task.priority]} hover:shadow-md transition-shadow relative flex flex-col cursor-pointer`}
+      onClick={handleCardClick}
+      className={`rounded-2xl p-[6px] pt-0 ${outerColors[task.priority]} hover:shadow-md transition-all relative flex flex-col cursor-pointer${isSelected ? ' ring-2 ring-[#00c48c] ring-offset-2 dark:ring-offset-[#0d1f2d]' : ''}`}
     >
       <div className="flex items-center space-x-2.5 px-3 py-3">
-        <span className={`w-3.5 h-3.5 rounded-full ${dotColors[task.priority]}`} />
+        {isBulkMode ? (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => { e.stopPropagation(); onToggleSelect?.(task.id); }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-4 h-4 rounded border-gray-400 text-[#00c48c] focus:ring-[#00c48c] cursor-pointer flex-shrink-0 accent-[#00c48c]"
+          />
+        ) : (
+          <span className={`w-3.5 h-3.5 rounded-full flex-shrink-0 ${dotColors[task.priority]}`} />
+        )}
         <span className={`text-xs font-bold tracking-widest uppercase ${accentColors[task.priority]}`}>
           {task.priority === 'HIGH' ? 'HIGH PRIORITY' : `${task.priority} PRIORITY`}
         </span>
@@ -101,35 +125,37 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
             {task.title}
           </h4>
 
-          <div className="relative">
-            <button
-              onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
-              onBlur={() => setTimeout(() => setShowMenu(false), 200)}
-              className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors relative z-20"
-            >
-              <EllipsisVerticalIcon className="w-5 h-5" />
-            </button>
-
-            {showMenu && (
-              <div
-                className="absolute right-0 top-8 w-36 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-30"
-                onClick={(e) => e.stopPropagation()}
+          {!isBulkMode && (
+            <div className="relative">
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }}
+                onBlur={() => setTimeout(() => setShowMenu(false), 200)}
+                className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors relative z-20"
               >
-                <button
-                  onClick={(e) => { e.stopPropagation(); onEdit(task); setShowMenu(false); }}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                <EllipsisVerticalIcon className="w-5 h-5" />
+              </button>
+
+              {showMenu && (
+                <div
+                  className="absolute right-0 top-8 w-36 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-100 dark:border-gray-700 py-1 z-30"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  Edit Task
-                </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onDelete(task); setShowMenu(false); }}
-                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onEdit(task); setShowMenu(false); }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  >
+                    Edit Task
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(task); setShowMenu(false); }}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* 3-step progress bar */}
@@ -154,11 +180,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
             >
               <select
                 value={task.status}
+                disabled={isBulkMode}
                 onChange={(e) => {
                   e.stopPropagation();
                   onStatusChange?.(task, e.target.value as TaskStatus);
                 }}
-                className={`text-xs font-semibold pl-3 pr-7 py-1.5 rounded-full cursor-pointer appearance-none outline-none border border-transparent shadow-sm dark:shadow-none hover:shadow ${statusStyles[task.status]}`}
+                className={`text-xs font-semibold pl-3 pr-7 py-1.5 rounded-full appearance-none outline-none border border-transparent shadow-sm dark:shadow-none hover:shadow ${statusStyles[task.status]}${isBulkMode ? ' opacity-50 cursor-not-allowed' : ' cursor-pointer'}`}
               >
                 {Object.entries(statusLabels).map(([key, label]) => (
                   <option key={key} value={key} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-medium">
@@ -166,7 +193,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onEdit, onView, onDelete, onS
                   </option>
                 ))}
               </select>
-              <ChevronDownIcon className="w-3 h-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" />
+              {!isBulkMode && (
+                <ChevronDownIcon className="w-3 h-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none opacity-60" />
+              )}
             </div>
             {task.taskType && (
               <span className="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700">

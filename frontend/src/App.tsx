@@ -8,12 +8,14 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import CalendarPage from './pages/CalendarPage';
+import SettingsPage from './pages/SettingsPage';
 
 // Layout
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import ToastContainer from './components/ui/ToastContainer';
 import PageTransition from './components/ui/PageTransition';
+import { KeybindsProvider } from './context/KeybindsContext';
 
 const API_URL = import.meta.env.VITE_API_URL as string ?? 'http://localhost:3000';
 
@@ -25,21 +27,24 @@ function App() {
   }, []);
 
   return (
-    <>
-      <PageTransition />
-      <Router basename={import.meta.env.BASE_URL}>
-        <ToastContainer />
-        <Routes>
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
-          
-          <Route path="/" element={<ProtectedRoute><Layout><DashboardPage /></Layout></ProtectedRoute>} />
-          <Route path="/calendar" element={<ProtectedRoute><Layout><CalendarPage /></Layout></ProtectedRoute>} />
-          
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </>
+    <KeybindsProvider>
+      <>
+        <PageTransition />
+        <Router basename={import.meta.env.BASE_URL}>
+          <ToastContainer />
+          <Routes>
+            <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
+            <Route path="/register" element={isAuthenticated ? <Navigate to="/" /> : <RegisterPage />} />
+
+            <Route path="/" element={<ProtectedRoute><Layout><DashboardPage /></Layout></ProtectedRoute>} />
+            <Route path="/calendar" element={<ProtectedRoute><Layout><CalendarPage /></Layout></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Layout><SettingsPage /></Layout></ProtectedRoute>} />
+
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Router>
+      </>
+    </KeybindsProvider>
   );
 }
 

@@ -60,12 +60,16 @@
   },
   "filters": {
     "button": "Filter",
+    "search": {
+      "placeholder": "Search tasks..."
+    },
     "status": {
       "title": "Status",
       "all": "All Status",
       "pending": "Pending",
       "inProgress": "In Progress",
-      "completed": "Completed"
+      "completed": "Completed",
+      "overdue": "Overdue"
     },
     "priority": {
       "title": "Priority",
