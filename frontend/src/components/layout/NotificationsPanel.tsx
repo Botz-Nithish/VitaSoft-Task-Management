@@ -1,5 +1,5 @@
 import React from 'react';
-import { XMarkIcon, ClockIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, ClockIcon, CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTasks } from '../../hooks/useTasks';
 import type { Task, TaskPriority } from '../../types/task.types';
@@ -16,6 +16,20 @@ export const getDaysUntilDue = (dueDate: string): number => {
   due.setHours(0, 0, 0, 0);
   return Math.round((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 };
+
+const getOverdueTasks = (tasks: Task[]): Task[] =>
+  tasks
+    .filter(t => {
+      if (!t.dueDate || t.status === 'FINISHED') return false;
+      return getDaysUntilDue(t.dueDate) < 0;
+    })
+    .sort((a, b) => {
+      const daysA = getDaysUntilDue(a.dueDate!);
+      const daysB = getDaysUntilDue(b.dueDate!);
+      if (daysA !== daysB) return daysA - daysB;
+      const w: Record<string, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+      return w[a.priority] - w[b.priority];
+    });
 
 const getUpcomingTasks = (tasks: Task[]): Task[] =>
   tasks
@@ -63,7 +77,9 @@ const statusLabel: Record<string, string> = {
 
 const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, onClose }) => {
   const { data: tasks = [] } = useTasks();
+  const overdueTasks = getOverdueTasks(tasks);
   const upcomingTasks = getUpcomingTasks(tasks);
+  const totalCount = overdueTasks.length + upcomingTasks.length;
 
   return (
     <AnimatePresence>
@@ -97,7 +113,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, onClose
                   <h2 className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
                     Reminders
                   </h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Tasks due within 2 days</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Overdue & due soon</p>
                 </div>
               </div>
               <button
@@ -111,7 +127,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, onClose
 
             {/* Task list */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {upcomingTasks.length === 0 ? (
+              {totalCount === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center px-4 pb-16">
                   <div className="w-16 h-16 rounded-full bg-[#00c48c]/10 dark:bg-[#00c48c]/15 flex items-center justify-center mb-4">
                     <CheckCircleIcon className="w-8 h-8 text-[#00c48c]" />
@@ -120,63 +136,108 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, onClose
                     All clear!
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                    No tasks are due in the next 2 days. Keep up the great work!
+                    No tasks are overdue or due in the next 2 days. Keep up the great work!
                   </p>
                 </div>
               ) : (
-                upcomingTasks.map((task, index) => {
-                  const days = getDaysUntilDue(task.dueDate!);
-                  const urgency = urgencyConfig[days];
-
-                  return (
-                    <motion.div
-                      key={task.id}
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="bg-gray-50 dark:bg-[#0d1f2d] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
-                    >
-                      {/* Urgency colour bar */}
-                      <div className={`h-1 w-full ${urgency.barClass}`} />
-
-                      <div className="p-3.5">
-                        {/* Title row */}
-                        <div className="flex items-start gap-2.5 mb-2.5">
-                          <span
-                            className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${priorityDotClass[task.priority]}`}
-                          />
-                          <p className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2">
-                            {task.title}
-                          </p>
-                        </div>
-
-                        {/* Chips row */}
-                        <div className="flex items-center gap-2 flex-wrap pl-4">
-                          <span
-                            className={`text-xs font-semibold px-2 py-0.5 rounded-full ${urgency.chipClass}`}
-                          >
-                            {urgency.label}
-                          </span>
-                          <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
-                            {task.priority} · {statusLabel[task.status]}
-                          </span>
-                        </div>
+                <>
+                  {/* Overdue section */}
+                  {overdueTasks.length > 0 && (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <ExclamationCircleIcon className="w-3.5 h-3.5 text-[#ef4444]" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#ef4444]">
+                          Overdue
+                        </span>
                       </div>
-                    </motion.div>
-                  );
-                })
+                      {overdueTasks.map((task, index) => {
+                        const days = Math.abs(getDaysUntilDue(task.dueDate!));
+                        return (
+                          <motion.div
+                            key={task.id}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="bg-gray-50 dark:bg-[#0d1f2d] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+                          >
+                            <div className="h-1 w-full bg-[#ef4444]" />
+                            <div className="p-3.5">
+                              <div className="flex items-start gap-2.5 mb-2.5">
+                                <span className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${priorityDotClass[task.priority]}`} />
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2">
+                                  {task.title}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 flex-wrap pl-4">
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                                  {days === 1 ? '1 day overdue' : `${days} days overdue`}
+                                </span>
+                                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
+                                  {task.priority} · {statusLabel[task.status]}
+                                </span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Due Soon section */}
+                  {upcomingTasks.length > 0 && (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <ClockIcon className="w-3.5 h-3.5 text-[#f59e0b]" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#f59e0b]">
+                          Due Soon
+                        </span>
+                      </div>
+                      {upcomingTasks.map((task, index) => {
+                        const days = getDaysUntilDue(task.dueDate!);
+                        const urgency = urgencyConfig[days];
+                        return (
+                          <motion.div
+                            key={task.id}
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="bg-gray-50 dark:bg-[#0d1f2d] rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden"
+                          >
+                            <div className={`h-1 w-full ${urgency.barClass}`} />
+                            <div className="p-3.5">
+                              <div className="flex items-start gap-2.5 mb-2.5">
+                                <span className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${priorityDotClass[task.priority]}`} />
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2">
+                                  {task.title}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 flex-wrap pl-4">
+                                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${urgency.chipClass}`}>
+                                  {urgency.label}
+                                </span>
+                                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">
+                                  {task.priority} · {statusLabel[task.status]}
+                                </span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
             {/* Footer */}
-            {upcomingTasks.length > 0 && (
+            {totalCount > 0 && (
               <div className="px-5 py-3.5 border-t border-gray-200 dark:border-gray-800 flex-shrink-0">
                 <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                   <span className="font-semibold text-gray-900 dark:text-white">
-                    {upcomingTasks.length}
+                    {totalCount}
                   </span>{' '}
-                  task{upcomingTasks.length !== 1 ? 's' : ''} need
-                  {upcomingTasks.length === 1 ? 's' : ''} your attention soon
+                  task{totalCount !== 1 ? 's' : ''} need
+                  {totalCount === 1 ? 's' : ''} your attention
                 </p>
               </div>
             )}

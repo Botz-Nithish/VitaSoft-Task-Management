@@ -13,7 +13,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const upcomingCount = tasks.filter(t => {
     if (!t.dueDate || t.status === 'FINISHED') return false;
     const days = getDaysUntilDue(t.dueDate);
-    return days >= 0 && days <= 2;
+    return days <= 2;
   }).length;
 
   return (
