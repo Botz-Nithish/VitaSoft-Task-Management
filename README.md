@@ -274,5 +274,5 @@ SPA routing on GitHub Pages is handled by a `404.html` redirect trick — unmatc
 
 - **Task ordering / drag-and-drop** — Manual reordering of tasks within a status group using a library like `@dnd-kit/core`
 - **Recurring tasks** — A repeat cadence field (daily, weekly, monthly) that auto-creates the next occurrence on completion
-- **Notifications / reminders** — Browser notifications or email reminders for tasks approaching their due date
+- **Multi User Tasks** —  A Multi User Task Management System where users can assign tasks to each other and track their progress.
 - **Export** — Download tasks as CSV or PDF for reporting
