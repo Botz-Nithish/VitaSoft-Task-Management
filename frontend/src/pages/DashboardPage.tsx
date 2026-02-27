@@ -148,21 +148,21 @@ const DashboardPage: React.FC = () => {
           count={finishedCount} 
           total={totalTasks} 
           colorClass="bg-[#d1fae5] text-[#065f46]"
-          icon={<CheckCircleIcon className="w-8 h-8" />} 
+          icon={<CheckCircleIcon className="w-8 h-8 text-[#00c48c]" />}
         />
-        <StatsCard 
+        <StatsCard
           title={uiText.dashboard.stats.inProgress}
-          count={startedCount} 
-          total={totalTasks} 
+          count={startedCount}
+          total={totalTasks}
           colorClass="bg-[#dbeafe] text-[#1e40af]"
-          icon={<ClockIcon className="w-8 h-8" />} 
+          icon={<ClockIcon className="w-8 h-8 text-[#00c48c]" />}
         />
-        <StatsCard 
+        <StatsCard
           title={uiText.dashboard.stats.notStarted}
-          count={notStartedCount} 
-          total={totalTasks} 
+          count={notStartedCount}
+          total={totalTasks}
           colorClass="bg-[#f3f4f6] text-[#6b7280]"
-          icon={<InboxIcon className="w-8 h-8" />} 
+          icon={<InboxIcon className="w-8 h-8 text-[#00c48c]" />}
         />
       </div>
 

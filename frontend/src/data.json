@@ -109,7 +109,7 @@
       "type": "Task Type",
       "typePlaceholder": "Select category...",
       "priority": "Priority Level",
-      "dueDate": "Timeline",
+      "dueDate": "Due Date",
       "datePlaceholder": "Select due date",
       "status": "Task Status"
     }
